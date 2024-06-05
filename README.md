@@ -1,10 +1,10 @@
 # Geography Trivia Game
 
-A simple geography trivia game implemented in Java, with questions and answers stored in a JSON file.
+A simple geography trivia game implemented in Java, with questions and answers served from a RESTful API built with Spark.
 
 ## Description
 
-This is a basic console-based geography trivia game where users are asked a series of geography-related questions. The user's answers are compared to the correct answers, and a final score is displayed at the end. The question and answers are stored in a JSON file.
+This is a basic console-based geography trivia game where users are asked a series of geography-related questions. The user's answers are compared to the correct answers, and a final score is displayed at the end. The question and answers are served from a RESTful API built with Spark in Java.
 
 ## Features
 
@@ -17,31 +17,31 @@ This is a basic console-based geography trivia game where users are asked a seri
 ### Prerequisites
 
 - Java Development Kit (JDK) installed
-- Gson library for JSON parsing
+- Maven installed
 
 ### Installation
 
 1. Clone the repository or download the source code.
 
 ```sh
-git clone https://github.com/FranEscano/geoTrivia.git
+git clone https://github.com/FranEscano/client.geoTriviaClient.git
 ```
 
 2. Navigate to the project directory.
 ```sh
-cd geoTrivia
+cd client.geoTriviaClientClient
 ```
 
 ### Running the Game
 
-1. Compile the Java source file.
+1. Start the JSON server.
 ```sh
-javac geoTrivia.java
+mvn compile exec:java
 ```
 
-2. Run the compiled Java program.
+2. In another terminal, compile the client Java source file.
 ```sh
-java geoTrivia
+mvn compile exec:java -Dexec.mainClass="client.geoTriviaClient"
 ```
 
 ## How to Play

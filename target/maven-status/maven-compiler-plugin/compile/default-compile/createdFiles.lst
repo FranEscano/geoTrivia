@@ -1,0 +1,5 @@
+client\geoTriviaClient.class
+server\Question.class
+server\geoTriviaServer.class
+client\geoTriviaClient$1.class
+server\geoTriviaServer$1.class
