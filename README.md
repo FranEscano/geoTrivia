@@ -52,7 +52,7 @@ npm install -g json-server
 If you are not using Maven, download the Gson jar from https://github.com/google/gson and add it to your 
 project's classpath
 
-### Running the Game
+## Running the Game
 
 1. Start the JSON server.
 ```sh
@@ -94,3 +94,20 @@ Incorrect. The correct answer is Nile.
 ...
 Your final score is: 4 out of 5
 ```
+
+
+## Running Tests
+
+### Prerequisites
+
+- Ensure the JSON server is running:
+```shell
+json-server --watch db.json
+```
+
+### Running Tests with Maven
+To run the tests, execute the following command:
+```shell
+mvn test
+```
+This will run tests using RestAssured to verify that the questions are being correctly fetched from the API.
