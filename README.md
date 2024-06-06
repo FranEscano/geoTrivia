@@ -1,14 +1,17 @@
 # Geography Trivia Game
 
-A simple geography trivia game implemented in Java, with questions and answers served from a RESTful API built with Spark.
+A simple geography trivia game implemented in Java, with questions and answers served from a JSON RESTful API.
 
 ## Description
 
-This is a basic console-based geography trivia game where users are asked a series of geography-related questions. The user's answers are compared to the correct answers, and a final score is displayed at the end. The question and answers are served from a RESTful API built with Spark in Java.
+This is a basic console-based geography trivia game where users are asked a series of geography-related questions. 
+The user's answers are compared to the correct answers, and a final score is displayed at the end. The question and 
+answers are served from a RESTful API using `json-server`.
+
 
 ## Features
 
-- Five geography-related questions
+- Geography-related questions served from a JSON RESTful API
 - Case-insensitive answer checking
 - Score tracking
 
@@ -17,31 +20,54 @@ This is a basic console-based geography trivia game where users are asked a seri
 ### Prerequisites
 
 - Java Development Kit (JDK) installed
-- Maven installed
+- Node.js installed
+- `json-server` installed globally
+- Gson library for JSON parsing (added as a dependency)
 
 ### Installation
 
 1. Clone the repository or download the source code.
 
 ```sh
-git clone https://github.com/FranEscano/client.geoTriviaClient.git
+git clone https://github.com/FranEscano/geoTrivia.git
 ```
 
 2. Navigate to the project directory.
 ```sh
-cd client.geoTriviaClientClient
+cd client.geoTrivia
 ```
+
+3. Install `json-server` if you haven't already
+```sh
+npm install -g json-server
+```
+
+4. Ensure you have the Gson library. If you are using Maven, add the following dependency to your `pom.xml:`
+```sh
+<dependency>
+  <groupId<com.google.code.gson</groupId>
+  <artifactId>gson</artifactId>
+  <version>2.8.6</version> 
+```
+If you are not using Maven, download the Gson jar from https://github.com/google/gson and add it to your 
+project's classpath
 
 ### Running the Game
 
 1. Start the JSON server.
 ```sh
-mvn compile exec:java
+json-server --watch db.json
 ```
 
-2. In another terminal, compile the client Java source file.
+2. Compile the Java source file.
 ```sh
-mvn compile exec:java -Dexec.mainClass="client.geoTriviaClient"
+mvn compile
+```
+
+3. Run the compiled Java program
+If using Maven:
+```sh
+mvn exec:java -Dexec.mainClass="geoTriviaClient"
 ```
 
 ## How to Play

@@ -1,5 +1,4 @@
-client\geoTriviaClient.class
-server\Question.class
-server\geoTriviaServer.class
-client\geoTriviaClient$1.class
-server\geoTriviaServer$1.class
+QuestionFetcher.class
+geoTriviaClient.class
+Question.class
+QuestionFetcher$1.class
