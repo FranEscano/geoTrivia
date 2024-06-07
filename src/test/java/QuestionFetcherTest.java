@@ -58,9 +58,10 @@ public class QuestionFetcherTest {
                 .statusCode(200)
             .and()
                 .assertThat()
-                    .body("id", equalTo("1"))
+                    .body("id", equalTo(1))
                     .body("question", equalTo("What is the capital of France?"))
                     .body("answer", equalTo("Paris"));
+
             System.out.println("testGetQuestionById passed");
         } catch (AssertionError e){
             System.out.println("Test failed: " +e.getMessage());
@@ -115,8 +116,6 @@ public class QuestionFetcherTest {
             System.out.println("Test failed: " +e.getMessage());
             fail("testUpdateQuestion failed");
         }
-
-
     }
 
     @Test
@@ -137,6 +136,114 @@ public class QuestionFetcherTest {
         } catch (AssertionError e){
             System.out.println("Test failed: " +e.getMessage());
             fail("testDeleteQuestion failed");
+        }
+    }
+
+    @Order(6)
+    @Test
+    public void testGetNonExistentQuestion(){
+        int nonExistentId = existingQuestions + 100; // Assume this ID does not exist
+
+        try {
+            given()
+                .pathParam("id", nonExistentId)
+            .when()
+                .get("questions/{id}")
+            .then()
+                .assertThat()
+                    .statusCode(404);
+
+            System.out.println("testGetNonExistentQuestion passed");
+        } catch (AssertionError e){
+            System.out.println("Test failed: " +e.getMessage());
+            fail("testGetNonExistentQuestion failed");
+        }
+    }
+
+    @Order(7)
+    @Test
+    public void testCreateQuestionWithNoBody(){
+
+        try {
+            given()
+                .contentType(ContentType.JSON)
+            .when()
+                .post("/questions")
+            .then()
+                .assertThat()
+                    .statusCode(400);
+
+            System.out.println("testCreateQuestionWithNoBody passed");
+        } catch (AssertionError e){
+            System.out.println("Test failed: " +e.getMessage());
+            fail("testCreateQuestionWithNoBody failed");
+        }
+    }
+
+    @Order(8)
+    @Test
+    public void testUpdateNonExistentQuestion(){
+        int nonExistentId = existingQuestions + 100; // Assume this ID does not exist
+        Question updatedQuestion = new Question("What is the capital of Germany?", "Berlin");
+
+        try {
+            given()
+                .contentType(ContentType.JSON)
+                .body(updatedQuestion)
+                .pathParam("id", nonExistentId)
+            .when()
+                .put("/questions/{id}")
+            .then()
+                .assertThat()
+                    .statusCode(404);
+
+            System.out.println("testUpdateNonExistentQuestion passed");
+        } catch (AssertionError e){
+            System.out.println("Test failed: " +e.getMessage());
+            fail("testUpdateNonExistentQuestion failed");
+        }
+    }
+
+    @Order(9)
+    @Test
+    public void  testDeleteNonExistentQuestion(){
+        int nonExistentId = existingQuestions + 100; // Assume this ID does not exist
+
+        try {
+            given()
+                .pathParam("id", nonExistentId)
+            .when()
+                .delete("/questions.{id}")
+            .then()
+                .assertThat()
+                    .statusCode(404);
+
+            System.out.println("testDeleteNonExistentQuestion passed");
+        }catch (AssertionError e){
+            System.out.println("Test failed: " +e.getMessage());
+            fail("testDeleteNonExistentQuestion failed");
+        }
+    }
+
+    @Order(10)
+    @Test
+    public void testCreateQuestionWithInvalidData(){
+        Question invalidQuestion = new Question("", "");
+
+        try {
+            given()
+                .contentType(ContentType.JSON)
+                .body(invalidQuestion)
+            .when()
+                .post("/questions")
+            .then()
+                .assertThat()
+                    .statusCode(400);
+
+            System.out.println("testCreateQuestionWithInvalidData passed");
+        } catch (AssertionError e){
+            System.out.println("Test failed: " +e.getMessage());
+            fail("testCreateQuestionWithInvalidData failed");
         }
     }
 }
