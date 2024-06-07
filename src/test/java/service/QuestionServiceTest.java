@@ -1,3 +1,7 @@
+package service;
+
+import model.Question;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -8,7 +12,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class QuestionFetcherTest {
+public class QuestionServiceTest {
 
     private static int existingQuestions;
 

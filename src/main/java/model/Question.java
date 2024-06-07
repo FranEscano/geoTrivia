@@ -1,10 +1,11 @@
-import javax.validation.constraints.NotBlank;
+package model;
+
 public class Question {
 
     int id;
-    @NotBlank(message = "Question text cannot be blank")
+
     String question;
-    @NotBlank(message = "Answer cannot be blank")
+
     String answer;
 
     public Question(String question, String answer) {
@@ -17,8 +18,6 @@ public class Question {
         this.question = question;
         this.answer = answer;
     }
-
-    // Getters and Setters
 
     public int getId() {
         return id;

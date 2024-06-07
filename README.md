@@ -67,7 +67,7 @@ mvn compile
 3. Run the compiled Java program
 If using Maven:
 ```sh
-mvn exec:java -Dexec.mainClass="geoTriviaClient"
+mvn exec:java -Dexec.mainClass="client.GeoTriviaClient"
 ```
 
 ## How to Play

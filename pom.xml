@@ -67,7 +67,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <mainClass>geoTriviaClient</mainClass>
+                    <mainClass>client.GeoTriviaClient</mainClass>
                 </configuration>
             </plugin>
             <plugin>
