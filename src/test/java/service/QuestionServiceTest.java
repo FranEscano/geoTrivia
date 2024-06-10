@@ -6,6 +6,10 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
@@ -17,9 +21,11 @@ public class QuestionServiceTest {
 
     private static int existingQuestions;
     private static final String AUTH = "Basic " + Base64.getEncoder().encodeToString("admin:password".getBytes());
+    private static final Path dbJsonPath = Path.of("src/main/resources/db.json");
+    private static final Path dbBackupPath = Path.of("src/main/resources/db_backup.json");
 
     @BeforeAll
-    public static void setup(){
+    public static void setup() throws IOException {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 3000;
 
@@ -29,6 +35,13 @@ public class QuestionServiceTest {
                 .get("/questions");
 
         existingQuestions = response.then().extract().path("size()");
+
+        Files.copy(dbJsonPath, dbBackupPath,StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException{
+        Files.copy(dbBackupPath, dbJsonPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Order(1)
@@ -37,8 +50,8 @@ public class QuestionServiceTest {
 
         try {
             given()
-                .header("Authorization", AUTH)
             .when()
+                .header("Authorization", AUTH)
                 .get("/questions")
             .then()
                 .statusCode(200)

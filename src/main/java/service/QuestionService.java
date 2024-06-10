@@ -16,15 +16,18 @@ public class QuestionService {
 
     private static final String AUTH = "admin:password";
 
+    // Method to fetch questions using the QuestionsFetcher class
     public List<Question> fetchQuestions(){
-        return QuestionFetcher.fetchQuestions();
+        return QuestionFetcher.fetchQuestions(); // Returning the List of questions fetched from the remote API
     }
 
+    // Method to add a new question
     public void addQuestion(Question question){
         try {
-            ValidationMiddleware.isValid(question);
+            ValidationMiddleware.isValid(question); // Validating the new question using Validation Middleware
+
             List<Question> existingQuestions = fetchQuestions();
-            int newId = existingQuestions.size() + 1;
+            int newId = existingQuestions.size() + 1; // Generating a new ID for the new questions
             question.setId(newId);
 
             URL url = new URL("http://localhost:3000/questions");

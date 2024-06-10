@@ -1,113 +1,73 @@
-# Geography Trivia Game
+**GeoTrivia Server**
 
-A simple geography trivia game implemented in Java, with questions and answers served from a JSON RESTful API.
+This project sets up a JSON server for a GeoTrivia application. It provides endpoints for fetching trivia questions, adding new questions, searching questions, and fetching paginated questions. The server includes authentication, request body validation, and logging functionalities.
 
-## Description
+### Setup Instructions
 
-This is a basic console-based geography trivia game where users are asked a series of geography-related questions. 
-The user's answers are compared to the correct answers, and a final score is displayed at the end. The question and 
-answers are served from a RESTful API using `json-server`.
+1. **Clone the Repository**:
+   ```
+   git clone https://github.com/your-username/geo-trivia-server.git
+   ```
 
+2. **Install Dependencies**:
+   ```
+   cd geo-trivia-server
+   npm install
+   ```
 
-## Features
+3. **Run the Server**:
+   ```
+   npm start
+   ```
 
-- Geography-related questions served from a JSON RESTful API
-- Case-insensitive answer checking
-- Score tracking
+4. **Access the API**:
+    - Trivia questions are available at `http://localhost:3000/questions`.
+    - Use basic authentication with username `admin` and password `password`.
 
-## Getting Started
+### Endpoints
 
-### Prerequisites
+- **GET `/questions`**: Fetches paginated trivia questions.
+    - Query Parameters:
+        - `page` (optional): Page number (default: 1).
+        - `limit` (optional): Number of questions per page (default: 10).
 
-- Java Development Kit (JDK) installed
-- Node.js installed
-- `json-server` installed globally
-- Gson library for JSON parsing (added as a dependency)
+- **GET `/search?q=query`**: Searches for trivia questions containing the specified query string.
 
-### Installation
+- **POST `/questions`**: Adds a new trivia question.
+    - Request Body:
+      ```json
+      {
+        "question": "What is the capital of France?",
+        "answer": "Paris"
+      }
+      ```
 
-1. Clone the repository or download the source code.
+### Authentication
 
-```sh
-git clone https://github.com/FranEscano/geoTrivia.git
-```
+- Basic authentication is required to access the API.
+- Username: `admin`
+- Password: `password`
 
-2. Navigate to the project directory.
-```sh
-cd client.geoTrivia
-```
+### Middleware
 
-3. Install `json-server` if you haven't already
-```sh
-npm install -g json-server
-```
+- **Authentication Middleware**: Ensures that endpoints are accessed with valid credentials.
+- **Validation Middleware**: Validates request bodies for POST and PUT requests.
+- **Log Middleware**: Logs request activity to a file named `activity.log`.
 
-4. Ensure you have the Gson library. If you are using Maven, add the following dependency to your `pom.xml:`
-```sh
-<dependency>
-  <groupId<com.google.code.gson</groupId>
-  <artifactId>gson</artifactId>
-  <version>2.8.6</version> 
-```
-If you are not using Maven, download the Gson jar from https://github.com/google/gson and add it to your 
-project's classpath
+### Dependencies
 
-## Running the Game
+- [json-server](https://www.npmjs.com/package/json-server): Used to create a mock JSON server.
+- [body-parser](https://www.npmjs.com/package/body-parser): Middleware for parsing JSON request bodies.
+- [fs](https://nodejs.org/api/fs.html): File system module for logging request activity.
 
-1. Start the JSON server.
-```sh
-json-server --watch db.json
-```
+### Usage
 
-2. Compile the Java source file.
-```sh
-mvn compile
-```
+- Use the provided endpoints to interact with the GeoTrivia server.
+- Fetch, add, search, and paginate trivia questions as needed.
+- Ensure proper authentication and valid request bodies for adding questions.
 
-3. Run the compiled Java program
-If using Maven:
-```sh
-mvn exec:java -Dexec.mainClass="client.GeoTriviaClient"
-```
+### Contributors
 
-## How to Play
- - The game will display a series of geography-related questions. 
- - Type your answer and press Enter. 
- - The game will inform you if your answer is correct or incorrect. 
- - At the end of the game, your final score will be displayed.
+- [Francisco Bejarano Escano](https://github.com/FranEscano)
 
-### Example Questions
-    1. What is the capital of France?
-    2. What is the longest river in the world?
-    3. What is the largest country in the world?
-    4. What is the largest desert in the world?
-    5. On which continent is Argentina located?
-
-### Example Output
-```
-What is the capital of France?
-Paris
-Correct!
-What is the longest river in the world?
-Amazon
-Incorrect. The correct answer is Nile.
-...
-Your final score is: 4 out of 5
-```
-
-
-## Running Tests
-
-### Prerequisites
-
-- Ensure the JSON server is running:
-```shell
-json-server --watch db.json
-```
-
-### Running Tests with Maven
-To run the tests, execute the following command:
-```shell
-mvn test
-```
-This will run tests using RestAssured to verify that the questions are being correctly fetched from the API.
+Feel free to contribute to this project by submitting pull requests or opening issues. Happy Trivia Gaming!

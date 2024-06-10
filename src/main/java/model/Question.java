@@ -8,11 +8,13 @@ public class Question {
 
     String answer;
 
+    // Constructor to initialize a Question object with question text and answer
     public Question(String question, String answer) {
         this.question = question;
         this.answer = answer;
     }
 
+    // Constructor to initialize a Question object with ID, question text and answer
     public Question(int id, String question, String answer) {
         this.id = id;
         this.question = question;

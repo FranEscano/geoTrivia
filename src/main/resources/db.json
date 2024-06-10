@@ -2,8 +2,8 @@
   "questions": [
     {
       "id": 1,
-      "question": "What is the capital of Spain?",
-      "answer": "Madrid"
+      "question": "What is the capital of France?",
+      "answer": "Paris"
     },
     {
       "id": 2,
@@ -21,9 +21,9 @@
       "answer": "Sahara"
     },
     {
-      "id": 6,
-      "question": "What is the capital of Italy?",
-      "answer": "Rome"
+      "id": 5,
+      "question": "In which continent is Argentina located?",
+      "answer": "South America"
     }
   ]
 }
