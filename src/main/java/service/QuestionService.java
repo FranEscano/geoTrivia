@@ -9,9 +9,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 public class QuestionService {
+
+    private static final String AUTH = "admin:password";
 
     public List<Question> fetchQuestions(){
         return QuestionFetcher.fetchQuestions();
@@ -28,6 +31,10 @@ public class QuestionService {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
+
+            String encodeAuth = Base64.getEncoder().encodeToString(AUTH.getBytes());
+            conn.setRequestProperty("Authorization", "Basic " + encodeAuth);
+
             conn.setDoOutput(true);
 
             Gson gson = new GsonBuilder().create();

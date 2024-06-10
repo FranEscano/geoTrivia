@@ -10,9 +10,12 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Base64;
 import java.util.List;
 
 public class QuestionFetcher {
+
+    private static final String AUTH = "admin:password";
 
     public static List<Question> fetchQuestions(){
         Gson gson = new Gson();
@@ -22,6 +25,10 @@ public class QuestionFetcher {
             URL url = new URL("http://localhost:3000/questions");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
+
+            String encondeAuth = Base64.getEncoder().encodeToString(AUTH.getBytes());
+            conn.setRequestProperty("Authorization", "Basic " + encondeAuth);
+
             conn.connect();
 
             int responseCode = conn.getResponseCode();

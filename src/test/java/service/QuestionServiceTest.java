@@ -1,11 +1,12 @@
 package service;
 
 import model.Question;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
+
+import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class QuestionServiceTest {
 
     private static int existingQuestions;
+    private static final String AUTH = "Basic " + Base64.getEncoder().encodeToString("admin:password".getBytes());
 
     @BeforeAll
     public static void setup(){
@@ -22,6 +24,7 @@ public class QuestionServiceTest {
         RestAssured.port = 3000;
 
         Response response = given()
+                .header("Authorization", AUTH)
                 .when()
                 .get("/questions");
 
@@ -34,6 +37,7 @@ public class QuestionServiceTest {
 
         try {
             given()
+                .header("Authorization", AUTH)
             .when()
                 .get("/questions")
             .then()
@@ -55,6 +59,7 @@ public class QuestionServiceTest {
     public void testGetQuestionById(){
         try {
             given()
+                .header("Authorization", AUTH)
                 .pathParam("id", 1)
             .when()
                 .get("/questions/{id}")
@@ -81,6 +86,7 @@ public class QuestionServiceTest {
 
         try {
             given()
+                .header("Authorization", AUTH)
                 .contentType(ContentType.JSON)
                 .body(question)
             .when()
@@ -105,6 +111,7 @@ public class QuestionServiceTest {
 
         try {
             given()
+                .header("Authorization", AUTH)
                 .contentType(ContentType.JSON)
                 .body(updatedQuestion)
                 .pathParam("id", 1)
@@ -129,6 +136,7 @@ public class QuestionServiceTest {
 
         try {
             given()
+                .header("Authorization", AUTH)
                 .pathParam("id", lastQuestionId)
             .when()
                 .delete("/questions/{id}")
@@ -150,6 +158,7 @@ public class QuestionServiceTest {
 
         try {
             given()
+                .header("Authorization", AUTH)
                 .pathParam("id", nonExistentId)
             .when()
                 .get("questions/{id}")
@@ -170,6 +179,7 @@ public class QuestionServiceTest {
 
         try {
             given()
+                .header("Authorization", AUTH)
                 .contentType(ContentType.JSON)
             .when()
                 .post("/questions")
@@ -192,6 +202,7 @@ public class QuestionServiceTest {
 
         try {
             given()
+                .header("Authorization", AUTH)
                 .contentType(ContentType.JSON)
                 .body(updatedQuestion)
                 .pathParam("id", nonExistentId)
@@ -215,6 +226,7 @@ public class QuestionServiceTest {
 
         try {
             given()
+                .header("Authorization", AUTH)
                 .pathParam("id", nonExistentId)
             .when()
                 .delete("/questions.{id}")
@@ -236,6 +248,7 @@ public class QuestionServiceTest {
 
         try {
             given()
+                .header("Authorization", AUTH)
                 .contentType(ContentType.JSON)
                 .body(invalidQuestion)
             .when()
@@ -248,6 +261,54 @@ public class QuestionServiceTest {
         } catch (AssertionError e){
             System.out.println("Test failed: " +e.getMessage());
             fail("testCreateQuestionWithInvalidData failed");
+        }
+    }
+
+    @Order(11)
+    @Test
+    public void testSearchQuestions(){
+        String searchTerm = "capital";
+
+        try {
+            given()
+                .header("Authorization", AUTH)
+                .queryParam("q", searchTerm)
+            .when()
+                .get("/search")
+            .then()
+                .statusCode(200)
+                .assertThat()
+                    .body("size()", greaterThan(0));
+
+            System.out.println("testSearchQuestions passed");
+        } catch (AssertionError e){
+            System.out.println("Test failed: " + e.getMessage());
+            fail("testSearchQuestions failed");
+        }
+    }
+
+    @Order(12)
+    @Test
+    public void testPagination(){
+        int page = 1;
+        int limit = 2;
+
+        try {
+            given()
+                .header("Authorization", AUTH)
+                .queryParam("page", page)
+                .queryParam("limit", limit)
+            .when()
+                .get("/questions")
+            .then()
+                .statusCode(200)
+                .assertThat()
+                    .body("size()", lessThanOrEqualTo(limit));
+
+            System.out.println("testPagination passed");
+        } catch (AssertionError e) {
+            System.out.println("Test failed: " + e.getMessage());
+            fail("testPagination failed");
         }
     }
 }
