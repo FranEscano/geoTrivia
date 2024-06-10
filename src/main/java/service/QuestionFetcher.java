@@ -10,8 +10,10 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 public class QuestionFetcher {
 
@@ -20,10 +22,10 @@ public class QuestionFetcher {
     //Method to fetch questions from a remote API
     public static List<Question> fetchQuestions(){
         Gson gson = new Gson();
-        List<Question> questions = null;
+        List<Question> allQuestions = new ArrayList<>();
 
         try {
-            URL url = new URL("http://localhost:3000/questions");
+            URL url = new URL("http://localhost:3000/categories");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
@@ -49,14 +51,25 @@ public class QuestionFetcher {
                 in.close();
                 conn.disconnect();
 
-                Type questionListType = new TypeToken<List<Question>>(){}.getType();
-                // Parsing the JSON response into a List<Question>
-                questions = gson.fromJson(content.toString(), questionListType); // Parsing the JSON response into a List<Question>
+                Type categoryListType = new TypeToken<List<Map<String, Object>>>(){}.getType();
+                List<Map<String, Object>> categories = gson.fromJson(content.toString(), categoryListType);
+
+                for (Map<String, Object> category : categories) {
+                    List<Map<String, Object>> questions = (List<Map<String, Object>>) category.get("questions");
+                    for (Map<String, Object> q : questions) {
+                        int id = ((Double) q.get("id")).intValue();
+                        String questionText = (String) q.get("question");
+                        String answer = (String) q.get("answer");
+                        List<String> options = (List<String>) q.get("options");
+                        Question question = new Question(id, questionText, answer, options);
+                        allQuestions.add(question);
+                    }
+                }
             }
         } catch (IOException e){
             e.printStackTrace();
         }
 
-        return questions;
+        return allQuestions;
     }
 }

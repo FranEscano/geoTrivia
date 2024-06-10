@@ -3,16 +3,17 @@ package client;
 import model.Question;
 import service.QuestionService;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
 public class GeoTriviaClient {
-
     private static final QuestionService questionService = new QuestionService();
-   public static void main(String[] args) { // Main method
+    public static void main(String[] args) { // Main method
        Scanner scanner = new Scanner(System.in);
 
-       while (true) { // Looping indefinitely until user choosed to exit
+       while (true) { // Looping indefinitely until user chose to exit
            System.out.println("Welcome to GeoTrivia");
            System.out.println("Choose an option:");
            System.out.println("1. Play");
@@ -50,13 +51,24 @@ public class GeoTriviaClient {
 
         for (Question q : questions) { // Looping through each question
             System.out.println(q.getQuestion());
-            String userAnswer = scanner.nextLine();
+            List<String> options = q.getOptions();
+            if (options != null && !options.isEmpty()) {
+                Collections.shuffle(options); // Shuffle the options to randomize their order
+                for (int i = 0; i < options.size(); i++) {
+                    System.out.println((i + 1) + ". " + options.get(i));
+                }
+            }
+            assert options != null;
+            System.out.println("Select the correct opcion (1-" + options.size() + "):");
+            int userChoice = scanner.nextInt();
+            scanner.nextLine();
 
-            if (userAnswer.equalsIgnoreCase(q.getAnswer())){ // Checking if user's answer matches the correct answer (case insensitive)
+            if (userChoice > 0 && userChoice <= options.size() && options.get(userChoice - 1)
+                    .equalsIgnoreCase(q.getAnswer())){
                 System.out.println("Correct!");
-                score++; // incremented for each correct answer
-            } else{
-                System.out.println("Incorrect. The correct answer is: " +q.getAnswer());
+                score++;
+            } else {
+                System.out.println("Incorrect. The correct answer is: " + q.getAnswer());
             }
         }
 
@@ -68,8 +80,10 @@ public class GeoTriviaClient {
         String questionText = scanner.nextLine();
         System.out.println("Enter the answer: ");
         String answerText = scanner.nextLine();
-
-        Question newQuestion = new Question(questionText, answerText); // Creating a new Question object with the provided question and answer
+        System.out.println("Enter the options separated by commas: ");
+        String optionsText = scanner.nextLine();
+        List<String> options = Arrays.asList(optionsText.split(","));
+        Question newQuestion = new Question(questionText, answerText, options); // Creating a new Question object with the provided question and answer
         questionService.addQuestion(newQuestion); // Adding the new question to the QuestionService
     }
 }

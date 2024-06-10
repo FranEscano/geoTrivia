@@ -35,7 +35,7 @@ const validationMiddleware = ((req, res, next) => {
     next();
 });
 
-// Middleware for loggin request activity
+// Middleware for logging request activity
 const logMiddleware = (req, res, next) => {
     const logEntry = `${new Date().toISOString()} - ${req.method} ${req.url}\n`; // Creating log entry
     fs.appendFile(logFile, logEntry, (err) => { // Appending log entry to the log file
@@ -53,7 +53,8 @@ server.use(logMiddleware);
 // Endpoint for searching questions
 server.get('/search', (req, res) => {
     const { q } = req.query; // Extracting query parameter 'q' for search
-    const questions = router.db.get('questions').value(); // Fetching questions from the database
+    const categories = router.db.get('categories').value();
+    const questions = categories.flatMap(category => category.questions); // Fetching questions from the database
     const filteredQuestions = questions.filter(question => // Filtering questions based on search query
         question.question && question.question.toLowerCase().includes(q.toLowerCase())
     );
@@ -61,16 +62,20 @@ server.get('/search', (req, res) => {
 });
 
 // Endpoint for fetching paginated questions
-server.get('/questions', (req, res, next) => {
+server.get('/categories/:category/questions', (req, res, next) => {
+    const { category } = req.param;
     let { page, limit } = req.query; // Extracting query parameters 'page' and 'limit' for pagination
     page = parseInt(page, 10) || 1; // Parsing page number as integer (default: 1)
     limit = parseInt(limit, 10) || 10; // Parsing limit as integer (default: 10)
 
-    const questions = router.db.get('questions').value();
+    const questions = router.db.get('categories').find({name: category}).get('questions').value();
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
 
-    const paginatedQuestions = questions.slice(startIndex, endIndex);
+    const paginatedQuestions = questions.slice(startIndex, endIndex).map(question => {
+        const { id, question: text, options, answer } = question;
+        return { id, text, options, answer};
+    });
     res.json(paginatedQuestions);
 });
 

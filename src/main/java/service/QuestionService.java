@@ -1,9 +1,9 @@
 package service;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import model.Question;
 import middleware.ValidationMiddleware;
-import com.google.gson.Gson;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -25,7 +25,6 @@ public class QuestionService {
     public void addQuestion(Question question){
         try {
             ValidationMiddleware.isValid(question); // Validating the new question using Validation Middleware
-
             List<Question> existingQuestions = fetchQuestions();
             int newId = existingQuestions.size() + 1; // Generating a new ID for the new questions
             question.setId(newId);
