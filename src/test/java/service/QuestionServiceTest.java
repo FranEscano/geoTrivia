@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
@@ -31,6 +32,7 @@ public class QuestionServiceTest {
 
         Response response = given()
                 .header("Authorization", AUTH)
+                .contentType(ContentType.JSON)
                 .when()
                 .get("/questions");
 
@@ -47,7 +49,6 @@ public class QuestionServiceTest {
     @Order(1)
     @Test
     public void testGetAllQuestions(){
-
         try {
             given()
             .when()
@@ -94,8 +95,8 @@ public class QuestionServiceTest {
     @Order(3)
     @Test
     public void testCreateQuestion(){
-
-        Question question = new Question(existingQuestions+1, "What is the capital of Italy?", "Rome");
+        Question question = new Question(existingQuestions+1, "What is the capital of Italy?", "Rome",
+                Arrays.asList("Rome", "Milan", "Naples", "Turin"));
 
         try {
             given()
@@ -103,7 +104,7 @@ public class QuestionServiceTest {
                 .contentType(ContentType.JSON)
                 .body(question)
             .when()
-                .post("/questions")
+                .post("/categories/Capitals/questions")
             .then()
                 .statusCode(201)
             .and()
@@ -120,7 +121,8 @@ public class QuestionServiceTest {
     @Test
     @Order(4)
     public void testUpdateQuestion(){
-        Question updatedQuestion = new Question("What is the capital of Spain?", "Madrid");
+        Question updatedQuestion = new Question("What is the capital of Spain?", "Madrid",
+                Arrays.asList("Madrid", "Barcelona", "Valencia", "Sevilla"));
 
         try {
             given()
@@ -195,7 +197,7 @@ public class QuestionServiceTest {
                 .header("Authorization", AUTH)
                 .contentType(ContentType.JSON)
             .when()
-                .post("/questions")
+                .post("/categories/General/questions")
             .then()
                 .assertThat()
                     .statusCode(400);
@@ -211,7 +213,8 @@ public class QuestionServiceTest {
     @Test
     public void testUpdateNonExistentQuestion(){
         int nonExistentId = existingQuestions + 100; // Assume this ID does not exist
-        Question updatedQuestion = new Question("What is the capital of Germany?", "Berlin");
+        Question updatedQuestion = new Question("What is the capital of Germany?", "Berlin",
+                Arrays.asList("Berlin", "Munich", "Frankfurt", "Hamburg"));
 
         try {
             given()
@@ -257,7 +260,7 @@ public class QuestionServiceTest {
     @Order(10)
     @Test
     public void testCreateQuestionWithInvalidData(){
-        Question invalidQuestion = new Question("", "");
+        Question invalidQuestion = new Question("", "", Arrays.asList("", ""));
 
         try {
             given()
@@ -265,7 +268,7 @@ public class QuestionServiceTest {
                 .contentType(ContentType.JSON)
                 .body(invalidQuestion)
             .when()
-                .post("/questions")
+                .post("/questions/General/questions")
             .then()
                 .assertThat()
                     .statusCode(400);
@@ -312,7 +315,7 @@ public class QuestionServiceTest {
                 .queryParam("page", page)
                 .queryParam("limit", limit)
             .when()
-                .get("/questions")
+                .get("/categories/Capitals/questions")
             .then()
                 .statusCode(200)
                 .assertThat()

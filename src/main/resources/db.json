@@ -1,12 +1,17 @@
 {
   "categories": [
     {
-      "name": "Capital Cities",
+      "name": "Capitals",
       "questions": [
         {
           "id": 1,
           "question": "What is the capital of France?",
-          "options": ["Paris", "London", "Berlin", "Madrid"],
+          "options": [
+            "Paris",
+            "London",
+            "Berlin",
+            "Madrid"
+          ],
           "answer": "Paris"
         }
       ]
@@ -17,7 +22,12 @@
         {
           "id": 2,
           "question": "What is the longest river in the world?",
-          "options": ["Nile", "Amazon", "Yangtze", "Mississippi"],
+          "options": [
+            "Nile",
+            "Amazon",
+            "Yangtze",
+            "Mississippi"
+          ],
           "answer": "Nile"
         }
       ]
@@ -28,7 +38,12 @@
         {
           "id": 3,
           "question": "What is the largest country in the world?",
-          "options": ["Russia", "Canada", "China", "USA"],
+          "options": [
+            "Russia",
+            "Canada",
+            "China",
+            "USA"
+          ],
           "answer": "Russia"
         }
       ]
@@ -39,7 +54,12 @@
         {
           "id": 4,
           "question": "What is the largest desert in the world?",
-          "options": ["Sahara", "Arabian", "Gobi", "Kalahari"],
+          "options": [
+            "Sahara",
+            "Arabian",
+            "Gobi",
+            "Kalahari"
+          ],
           "answer": "Sahara"
         }
       ]
@@ -50,7 +70,12 @@
         {
           "id": 5,
           "question": "In which continent is Argentina located?",
-          "options": ["South America", "Europe", "Africa", "Asia"],
+          "options": [
+            "South America",
+            "Europe",
+            "Africa",
+            "Asia"
+          ],
           "answer": "South America"
         }
       ]

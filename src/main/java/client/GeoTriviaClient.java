@@ -83,7 +83,25 @@ public class GeoTriviaClient {
         System.out.println("Enter the options separated by commas: ");
         String optionsText = scanner.nextLine();
         List<String> options = Arrays.asList(optionsText.split(","));
-        Question newQuestion = new Question(questionText, answerText, options); // Creating a new Question object with the provided question and answer
-        questionService.addQuestion(newQuestion); // Adding the new question to the QuestionService
+
+        List<String> categories = questionService.fetchCategories();
+
+        System.out.println("Choose a category:");
+        for (int i = 0; i <categories.size(); i++) {
+            System.out.println((i + 1) + ". " + categories.get(i));
+        }
+        int categoryChoice = scanner.nextInt();
+
+        scanner.nextLine();
+
+        if (categoryChoice > 0 && categoryChoice <= categories.size()) {
+            String selectedCategory = categories.get(categoryChoice - 1);
+
+            Question newQuestion = new Question(questionText, answerText, options); // Creating a new Question object with the provided question and answer
+
+            questionService.addQuestionToCategory(newQuestion, selectedCategory); // Adding the new question to the QuestionService
+        } else {
+            System.out.println("Invalid category choice.");
+        }
     }
 }

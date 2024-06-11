@@ -50,6 +50,69 @@ server.use(authMiddleware);
 server.use(validationMiddleware);
 server.use(logMiddleware);
 
+// Endpoint for adding a question to a specific category
+server.post('/categories/:category/questions', (req, res) => {
+    const { category } = req.params;
+    const { question, answer , options } = req.body;
+
+    const categoryData = router.db.get('categories').find({ name: category }).value();
+
+    if (!categoryData){
+        return res.status(404).json({ error: "Category not found "});
+    }
+
+    const allQuestions = router.db.get('categories').flatMap('questions').value();
+    const newId = allQuestions.length ? Math.max(...allQuestions.map(q => q.id)) + 1 : 1;
+
+    const newQuestion = { id: newId, question, answer, options };
+
+    router.db.get('categories').find({ name: category }).get('questions').push(newQuestion).write();
+    res.status(201).json(newQuestion);
+});
+
+// Endpoint for fetching all questions
+server.get('/questions', (req, res) => {
+    const questions = router.db.get('categories').flatMap('questions').value();
+    res.json(questions);
+});
+
+// Endpoint for fetching a question by ID
+server.get('/questions/:id', (req, res) => {
+    const { id } = req.params;
+    const question = router.db.get('categories').flatMap(category => category.questions).find({ id: parseInt(id) }).value();
+    if(question) {
+        res.json(question);
+    } else {
+        res.status(404).json({ error: 'Question not found' });
+    }
+});
+
+// Endpoint for updating a question by ID
+server.put('/questions/:id', (req, res) => {
+    const { id } = req.params;
+    const { question, answer, options } = req.body;
+    const questionData = router.db.get('categories').flatMap('questions').find({ id: parseInt(id)}).value();
+    if (questionData) {
+        Object.assign(questionData, { question, answer, options });
+        router.db.write();
+        res.json(questionData);
+    } else {
+        res.status(404).json({ error: 'Question not found' });
+    }
+});
+
+// Endpoint for deleting a question by ID
+server.delete('/questions/:id', (req, res) => {
+    const { id } = req.params;
+    const question = router.db.get('categories').flatMap('questions').find({ id: parseInt(id) }).value();
+    if (question) {
+        router.db.get('categories').flatMap('questions').remove({ id: parseInt(id) }).write();
+        res.status(200).json({ message: 'Question deleted' });
+    } else {
+        res.status(404).json({ error: 'Question not found' });
+    }
+});
+
 // Endpoint for searching questions
 server.get('/search', (req, res) => {
     const { q } = req.query; // Extracting query parameter 'q' for search
@@ -63,12 +126,20 @@ server.get('/search', (req, res) => {
 
 // Endpoint for fetching paginated questions
 server.get('/categories/:category/questions', (req, res, next) => {
-    const { category } = req.param;
+    const { category } = req.params;
+
     let { page, limit } = req.query; // Extracting query parameters 'page' and 'limit' for pagination
     page = parseInt(page, 10) || 1; // Parsing page number as integer (default: 1)
     limit = parseInt(limit, 10) || 10; // Parsing limit as integer (default: 10)
 
-    const questions = router.db.get('categories').find({name: category}).get('questions').value();
+    const categoryData = router.db.get('categories').find({ name: category }).value();
+
+    if(!categoryData) {
+        return res.status(404).json({ error: 'Category not found' })
+    }
+
+    const questions = categoryData.questions || [];
+
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
 
@@ -78,7 +149,6 @@ server.get('/categories/:category/questions', (req, res, next) => {
     });
     res.json(paginatedQuestions);
 });
-
 
 server.use(middleware);
 server.use(router);
