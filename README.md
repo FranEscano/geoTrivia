@@ -6,12 +6,12 @@ This project sets up a JSON server for a GeoTrivia application. It provides endp
 
 1. **Clone the Repository**:
    ```
-   git clone https://github.com/your-username/geo-trivia-server.git
+   git clone https://github.com/FranEscano/geoTrivia.git
    ```
 
 2. **Install Dependencies**:
    ```
-   cd geo-trivia-server
+   cd geoTrivia
    npm install
    ```
 
