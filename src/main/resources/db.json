@@ -13,6 +13,17 @@
             "Madrid"
           ],
           "answer": "Paris"
+        },
+        {
+          "id": 6,
+          "question": "What is the capital of Portugal?",
+          "answer": "Lisbon",
+          "options": [
+            "Lisbon",
+            " Madrid",
+            " Paris",
+            " Rome"
+          ]
         }
       ]
     },

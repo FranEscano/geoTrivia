@@ -3,8 +3,10 @@ package service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import config.AppConfig;
 import model.Question;
 import middleware.ValidationMiddleware;
+import util.Utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,13 +16,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 public class QuestionService {
-
-    private static final String AUTH = "admin:password";
 
     // Method to fetch questions using the QuestionsFetcher class
     public List<Question> fetchQuestions(){
@@ -31,11 +30,11 @@ public class QuestionService {
     public  List<String> fetchCategories(){
         List<String> categories = new ArrayList<>();
         try {
-            URL url = new URL("http://localhost:3000/categories");
+            URL url = new URL(AppConfig.BASE_URL + "/categories");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
-            String encodeAuth = Base64.getEncoder().encodeToString(AUTH.getBytes());
+            String encodeAuth = Utils.encodeCredentials();
             conn.setRequestProperty("Authorization", "Basic " + encodeAuth);
 
             conn.connect();
@@ -79,12 +78,12 @@ public class QuestionService {
         try {
             ValidationMiddleware.isValid(question); // Validating the new question using Validation Middleware
 
-            URL url = new URL("http://localhost:3000/categories/" + category + "/questions");
+            URL url = new URL(AppConfig.BASE_URL + "/categories/" + category + "/questions");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
 
-            String encodeAuth = Base64.getEncoder().encodeToString(AUTH.getBytes());
+            String encodeAuth = Utils.encodeCredentials();
             conn.setRequestProperty("Authorization", "Basic " + encodeAuth);
 
             conn.setDoOutput(true);

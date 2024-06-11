@@ -1,0 +1,6 @@
+/target/
+/node_modules/
+/activity.log
+/package.json
+/package-lock.json
+/src/main/resources/db_backup.json

@@ -2,7 +2,9 @@ package service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import config.AppConfig;
 import model.Question;
+import util.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,13 +13,10 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 public class QuestionFetcher {
-
-    private static final String AUTH = "admin:password"; // Defining authorization credentials
 
     //Method to fetch questions from a remote API
     public static List<Question> fetchQuestions(){
@@ -25,11 +24,11 @@ public class QuestionFetcher {
         List<Question> allQuestions = new ArrayList<>();
 
         try {
-            URL url = new URL("http://localhost:3000/categories");
+            URL url = new URL(AppConfig.BASE_URL + "/categories");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
-            String encondeAuth = Base64.getEncoder().encodeToString(AUTH.getBytes()); // Encoding authorization credentials
+            String encondeAuth = Utils.encodeCredentials(); // Encoding authorization credentials
             conn.setRequestProperty("Authorization", "Basic " + encondeAuth); // Setting Authorization header
 
             conn.connect();
