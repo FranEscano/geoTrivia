@@ -1,0 +1,16 @@
+{
+  "name": "geotrivia",
+  "version": "1.0.0",
+  "description": "A simple geography trivia game implemented in Java, with questions and answers served from a JSON RESTful API.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json-server": "^0.16.3"
+  }
+}
